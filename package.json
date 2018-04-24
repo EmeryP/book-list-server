@@ -4,7 +4,8 @@
   "description": "emery-jason-book-app",
   "main": "\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001bserver.js)",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
