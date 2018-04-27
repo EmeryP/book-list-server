@@ -8,7 +8,7 @@ const app = express();
 const PORT = process.env.PORT;
 const CLIENT_URL = process.env.CLIENT_URL;
 
-const client = new pg.Client(process.env.DATABASE_URL || 'postgres://postgres:1234@localhost:5432/postgres');
+const client = new pg.Client(process.env.DATABASE_URL);
 client.connect();
 client.on('error', err => console.error(err));
 
@@ -21,20 +21,21 @@ app.get('/test/', (req, res) => res.send('Welcome to our data'));
 // app.get('/test', (req, res) => res.send('Hello world'));
 
 app.get('/api/v1/books', (req, res) => {
-  client.query('SELECT * FROM books;')
+  client.query('SELECT * FROM books')
     .then(results => res.send(results.rows))
     .catch(console.error);
 });
 
 app.get('/api/v1/books/:id', (req, res) => { //placeholder for any id being passed in
-  client.query('SELECT * FROM books WHERE id = $1', [req.params.id])
+  client.query(`SELECT * FROM books WHERE id = $1`, [req.params.id])
     .then(results => res.send(results.rows[0]))
     .catch(console.error);
 });
 
 app.post('/api/v1/books', (req, res) => {
+  console.log('I come from the post');
   console.log(req.body.book);
-  let insert = 'INSERT INTO books (title, author, isbn, image_url, description) VALUES ($1, $2, $3, $4, $5)';
+  let insert = `INSERT INTO books (title, author, isbn, image_url, description) VALUES ($1, $2, $3, $4, $5, $6)`;
   let values = [req.body.title,
     req.body.author,
     req.body.isbn,
@@ -44,8 +45,8 @@ app.post('/api/v1/books', (req, res) => {
   client.query(insert, values)
     .then(results => res.json(results))
     .catch(err => {
-      console.error(err)
-      res.sendStatus(500).send("error");
+      console.error(err);
+      res.sendStatus(500).send('error');
     });
 });
 
