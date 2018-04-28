@@ -1,24 +1,26 @@
 'use strict';
 
+// Application dependencies
 const cors = require('cors');
 const pg = require('pg');
 const express = require('express');
 const app = express();
 
+// Application setup
 const PORT = process.env.PORT;
 const CLIENT_URL = process.env.CLIENT_URL;
 
+// Database setup
 const client = new pg.Client(process.env.DATABASE_URL);
 client.connect();
 client.on('error', err => console.error(err));
 
+// Application middleware
 app.use(cors());
 
+// API endpoints
 app.get('/', (req, res) => res.redirect(CLIENT_URL));
-
 app.get('/test/', (req, res) => res.send('Welcome to our data'));
-
-// app.get('/test', (req, res) => res.send('Hello world'));
 
 app.get('/api/v1/books', (req, res) => {
   client.query('SELECT * FROM books')
@@ -27,8 +29,8 @@ app.get('/api/v1/books', (req, res) => {
 });
 
 app.get('/api/v1/books/:id', (req, res) => { //placeholder for any id being passed in
-  client.query(`SELECT * FROM books WHERE id = $1`, [req.params.id])
-    .then(results => res.send(results.rows[0]))
+  client.query(`SELECT * FROM books WHERE id =${req.params.id}`)
+    .then(results => res.send(results.rows))
     .catch(console.error);
 });
 
