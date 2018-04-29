@@ -28,7 +28,7 @@ app.get('/api/v1/books', (req, res) => {
     .catch(console.error);
 });
 
-app.get('/api/v1/books/:id', (req, res) => { //placeholder for any id being passed in
+app.get('/api/v1/books/:id', (req, res) => {
   client.query(`SELECT * FROM books WHERE id =${req.params.id}`)
     .then(results => res.send(results.rows))
     .catch(console.error);
@@ -36,7 +36,6 @@ app.get('/api/v1/books/:id', (req, res) => { //placeholder for any id being pass
 
 app.post('/api/v1/books', (req, res) => {
   console.log('I come from the post');
-  console.log(req.body.book);
   let insert = `INSERT INTO books (title, author, isbn, image_url, description) VALUES ($1, $2, $3, $4, $5, $6)`;
   let values = [req.body.title,
     req.body.author,
